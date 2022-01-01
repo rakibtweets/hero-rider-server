@@ -22,6 +22,7 @@ async function run() {
     const database = client.db('hero-rider');
     const usersCollection = database.collection('users');
     const riderCollection = database.collection('riders');
+    const paymentCollection = database.collection('payments');
 
     // post user
     app.post('/users', async (req, res) => {
@@ -81,6 +82,27 @@ async function run() {
       const updateDoc = { $set: { role: 'admin' } };
       const result = await usersCollection.updateOne(filter, updateDoc);
       res.json(result);
+    });
+
+    // update appointment payment status
+    app.post('/payment', async (req, res) => {
+      const paymentBody = req.body;
+      const payment = req.body;
+      const result = await paymentCollection.insertOne(riderInfo);
+      res.json(result);
+    });
+
+    //payment getway api post
+
+    app.post('/create-payment-intent', async (req, res) => {
+      const paymentInfo = req.body;
+      const amount = paymentInfo.price * 100;
+      const paymentIntent = await stripe.paymentIntents.create({
+        currency: 'usd',
+        amount: amount,
+        payment_method_types: ['card'],
+      });
+      res.json({ clientSecret: paymentIntent.client_secret });
     });
   } finally {
     //   await client.close();
