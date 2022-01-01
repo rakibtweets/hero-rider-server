@@ -37,6 +37,16 @@ async function run() {
       res.send(result);
     });
 
+    //search registered user
+
+    app.get('/allRiders', async (req, res) => {
+      const search = req.query.search;
+      const query = { email: search, fullName: search, phoneNo: search };
+      const cusor = riderCollection.find(query);
+      const result = await cusor.toArray();
+      res.send(result);
+    });
+
     //GET riders details
     app.get('/riders/:email', async (req, res) => {
       const email = req.params.email;
